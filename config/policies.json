@@ -15,7 +15,7 @@
             "criteria": [
               {
                 "model": "openai/gpt-5-nano",
-                "description": "Simple questions that do not need comple thought."
+                "description": "Simple questions that do not need complex thought."
               },
               {
                 "model": "anthropic/claude-sonnet-5",

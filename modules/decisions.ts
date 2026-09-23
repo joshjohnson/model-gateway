@@ -6,10 +6,8 @@ import {
 } from "@zuplo/runtime";
 
 
-interface Criteria {
-  model: string;
-  description: string;
-}
+interface Criteria extends Record<string, string> {}
+
 interface DecisionsOptions {
   api: {
     key: string;
@@ -18,7 +16,7 @@ interface DecisionsOptions {
   model: {
     name?: string;
     instructions?: string;
-    criteria: Criteria[];
+    criteria: Criteria;
   }
   
 }
@@ -39,7 +37,24 @@ export default async function decisionModel(
   const decisionsUrl = options.api.url ?? DEFAULT_DECISIONS_MODEL_URL;
 
 
-  const decisionRequestBody = {model: modelName,
+  const body = await request.clone().json();
+
+  // chat/completions → messages[]; responses API → input
+  const messages = body.messages ?? [];
+  const lastUser = [...messages].reverse().find((m) => m.role === "user");
+  const prompt =
+    typeof lastUser?.content === "string"
+      ? lastUser.content
+      // multimodal content is an array of parts
+      : (lastUser?.content ?? [])
+          .filter((p) => p.type === "text")
+          .map((p) => p.text)
+          .join("\n");
+
+
+  const decisionRequestBody = {
+    model: modelName,
+    state: prompt,
     questions: {
       model: {
         type: "choice",
