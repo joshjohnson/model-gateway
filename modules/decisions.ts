@@ -66,6 +66,7 @@ export default async function decisionModel(
 
   context.log.debug("Decision request body:", decisionRequestBody);
 
+  const decisionFetchStart = performance.now();
   let decisionResult = await fetch(decisionsUrl, {
     method: "POST",
     headers: {
@@ -73,6 +74,11 @@ export default async function decisionModel(
       "Authorization": `Bearer ${apiKey}`,
     },
     body: JSON.stringify(decisionRequestBody),
+  });
+  const decisionFetchDurationMs = performance.now() - decisionFetchStart;
+  context.log.debug("Decision model fetch completed:", {
+    durationMs: decisionFetchDurationMs,
+    status: decisionResult.status,
   });
   
 
