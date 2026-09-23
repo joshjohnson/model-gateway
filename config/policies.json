@@ -1,6 +1,37 @@
 {
   "policies": [
     {
+      "name": "classifier",
+      "policyType": "custom-code-inbound",
+      "handler": {
+        "export": "default",
+        "module": "$import(./modules/decisions)",
+        "options": {
+          "api": {
+            "key": "",
+            "url": "https://openrouter.ai/api/alpha/decisions"
+          },
+          "model": {
+            "criteria": [
+              {
+                "model": "openai/gpt-5-nano",
+                "description": "Simple questions that do not need comple thought."
+              },
+              {
+                "model": "anthropic/claude-sonnet-5",
+                "description": "More complex questions that may require detailed reasoning."
+              },
+              {
+                "model": "zuplodemo/pirate",
+                "description": "Questions about pirates."
+              }
+            ]
+          }
+        }
+      }
+    },
+
+    {
       "handler": {
         "export": "AIGatewayAuthV2InboundPolicy",
         "module": "$import(@zuplo/runtime)",
