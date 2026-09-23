@@ -81,7 +81,7 @@ export default async function decisionModel(
 
   context.log.debug("Decision data received:", decisionData);
 
-  const answerModel = decisionData.answer.model;
+  const answerModel = decisionData.answers.model;
 
   await AIGatewayModelRouting.set(context, {
     completions: `${answerModel.choice}`,
